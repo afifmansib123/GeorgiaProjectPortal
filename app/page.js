@@ -1,11 +1,12 @@
 "use client"
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import enUS from 'date-fns/locale/en-US';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import Modal from 'react-modal'; // For task input modal
-import "./globals.css"
+
+const TaskModal = dynamic(() => import('./TaskModal'), { ssr: false });
 
 const locales = {
   'en-US': enUS,
@@ -18,8 +19,6 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 });
-
-Modal.setAppElement(document.body);
 
 export default function Home() {
   const [currentView, setCurrentView] = useState(Views.MONTH);
@@ -67,7 +66,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-3xl font-bold mb-6">Georgia Project - Scrum Management</h1>
+      <h1 className="text-3xl font-bold mb-6">Georgia Project Scrum Manager</h1>
       <div className="flex mb-4 space-x-2">
         <button onClick={() => handleNavigate('TODAY')} className="px-4 py-2 bg-gray-200 rounded-md">Today</button>
         <button onClick={() => handleNavigate('PREV')} className="px-4 py-2 bg-gray-200 rounded-md">Back</button>
@@ -96,43 +95,13 @@ export default function Home() {
         />
       </div>
 
-      <Modal
+      <TaskModal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        contentLabel="Add New Event"
-        className="modal-content"
-        overlayClassName="modal-overlay"
-      >
-        <h2>Add Task</h2>
-        <form>
-          <label>Title</label>
-          <input
-            type="text"
-            name="title"
-            value={newEvent.title}
-            onChange={handleInputChange}
-            className="w-full p-2 mb-2 border rounded"
-          />
-          <label>Description</label>
-          <textarea
-            name="desc"
-            value={newEvent.desc}
-            onChange={handleInputChange}
-            className="w-full p-2 mb-2 border rounded"
-          />
-          <label>Color</label>
-          <input
-            type="color"
-            name="color"
-            value={newEvent.color}
-            onChange={handleInputChange}
-            className="w-full p-2 mb-4"
-          />
-          <button type="button" onClick={addEvent} className="px-4 py-2 bg-blue-500 text-white rounded">Add Task</button>
-          <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-300 ml-2 rounded">Cancel</button>
-        </form>
-      </Modal>
+        addEvent={addEvent}
+        newEvent={newEvent}
+        handleInputChange={handleInputChange}
+      />
     </main>
   );
 }
-
