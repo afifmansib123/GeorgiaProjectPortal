@@ -67,7 +67,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-3xl font-bold mb-6">Calendar with Sticky Notes</h1>
+      <h1 className="text-3xl font-bold mb-6">Georgia Project - Scrum Management</h1>
       <div className="flex mb-4 space-x-2">
         <button onClick={() => handleNavigate('TODAY')} className="px-4 py-2 bg-gray-200 rounded-md">Today</button>
         <button onClick={() => handleNavigate('PREV')} className="px-4 py-2 bg-gray-200 rounded-md">Back</button>
